@@ -10,12 +10,15 @@
 
 #include <atomic>
 
+#include "../../src/SDLWindow.cpp"
+
 
 class TeleoperationDualControl : public rclcpp::Node
 {
 public:
   TeleoperationDualControl();
-  virtual void getPosition() = 0;
+  ~TeleoperationDualControl() override;
+  virtual void checkButton() = 0;
   void publishPosition();
 
  protected:
@@ -24,12 +27,13 @@ public:
   double rx;
   double ry;
 
-  std::atomic<bool> running;
-
   std::thread keyboard_thread;
- private:
 
-    rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr publisher_teleoperation;
+  SDLWindow* window;
+
+ private:
+  rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr publisher_teleoperation;
+  rclcpp::TimerBase::SharedPtr check_buttons;
 };
 
 

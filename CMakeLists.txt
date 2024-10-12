@@ -14,9 +14,14 @@ find_package(sensor_msgs REQUIRED)
 
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
+find_package(SDL2_ttf REQUIRED)
+include_directories(${SDL2_TTF_INCLUDE_DIRS})
 
-#find_library(SDL2 NAMES SDL2 PATHS /usr/lib)
-
+#SDLWindow
+add_library(SDLWindow STATIC
+        src/SDLWindow.cpp)
+install(TARGETS SDLWindow
+        DESTINATION lib/${PROJECT_NAME})
 
 #teleoperation_dual_control
 add_library(teleoperation_dual_control STATIC
@@ -42,11 +47,9 @@ ament_target_dependencies(
         sensor_msgs
         geometry_msgs
 )
-#target_link_directories(teleoperation_dual_control_keyboard SDL2)
-target_link_libraries(teleoperation_dual_control_keyboard SDL2)
+target_link_libraries(teleoperation_dual_control_keyboard SDL2 SDL2_ttf)
 install(TARGETS teleoperation_dual_control_keyboard
         DESTINATION lib/${PROJECT_NAME})
-
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
